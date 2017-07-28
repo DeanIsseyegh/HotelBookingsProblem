@@ -19,14 +19,14 @@ public class HotelBookingManager implements BookingManager {
     public boolean isRoomAvailable(Integer room, LocalDate date) {
         Boolean isAvailable = false;
         if (domainStore.doesRoomExist(room)) {
-            isAvailable = !doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room));
+            isAvailable = !doesRoomHaveBookingOnDate(room, date);
         }
         return isAvailable;
     }
 
     @Override
     public synchronized void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException {
-        if (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room))) {
+        if (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date)) {
             domainStore.addBooking(new Booking(guest, room, date));
         } else {
             throw new NoRoomsAvailableException();
@@ -36,12 +36,12 @@ public class HotelBookingManager implements BookingManager {
     @Override
     public Iterable<Integer> getAvailableRooms(LocalDate date) {
         Set<Integer> availableRooms = new HashSet<>(domainStore.getRooms());
-        availableRooms.removeIf((Integer room) -> doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room)));
+        availableRooms.removeIf((Integer room) -> doesRoomHaveBookingOnDate(room, date));
         return availableRooms;
     }
 
-    private Boolean doesRoomHaveBookingOnDate(Integer room, LocalDate date, List<Booking> existingBookings) {
-        List<Booking> threadSafeBookings = new ArrayList<>(existingBookings);
+    private Boolean doesRoomHaveBookingOnDate(Integer room, LocalDate date) {
+        List<Booking> threadSafeBookings = new ArrayList<>(domainStore.getBookingsForRoom(room));
         for (Booking booking : threadSafeBookings) {
             if (booking.isOn(room, date)) {
                 return true;
