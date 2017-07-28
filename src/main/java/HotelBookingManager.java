@@ -2,7 +2,6 @@ import domain.datamodel.Booking;
 import domain.DomainStore;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,20 +15,16 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public boolean isRoomAvailable(Integer room, LocalDate date) {
-        Set<Integer> rooms = domainStore.getRooms();
-        List<Booking> bookings = domainStore.getBookings();
         Boolean isAvailable = false;
-        if (rooms.contains(room)) {
-            isAvailable = !doesRoomHaveBookingOnDate(room, date, bookings);
+        if (domainStore.doesRoomExist(room)) {
+            isAvailable = !doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room));
         }
         return isAvailable;
     }
 
     @Override
     public void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException{
-        Set<Integer> rooms = domainStore.getRooms();
-        List<Booking> bookings = domainStore.getBookings();
-        if (rooms.contains(room) && !doesRoomHaveBookingOnDate(room, date, bookings)) {
+        if (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room))) {
             domainStore.addBooking(new Booking(guest, room, date));
         } else {
             throw new NoRoomsAvailableException();
@@ -38,9 +33,8 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public Iterable<Integer> getAvailableRooms(LocalDate date) {
-        ArrayList<Integer> availableRooms = new ArrayList<>(domainStore.getRooms());
-        List<Booking> bookings = domainStore.getBookings();
-        availableRooms.removeIf((Integer room) -> doesRoomHaveBookingOnDate(room, date, bookings));
+        Set<Integer> availableRooms = domainStore.getRooms();
+        availableRooms.removeIf((Integer room) -> doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room)));
         return availableRooms;
     }
 

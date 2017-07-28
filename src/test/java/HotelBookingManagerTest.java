@@ -91,7 +91,7 @@ public class HotelBookingManagerTest {
     public void Given_NoRoomsExist_Then_ReturnEmptyList() {
         DomainStore domainStore = new DomainStore(null);
         BookingManager bookingManager = new HotelBookingManager(domainStore);
-        assertThat(bookingManager.getAvailableRooms(today), is(new ArrayList<>()));
+        assertThat(bookingManager.getAvailableRooms(today), is(new HashSet<>()));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class HotelBookingManagerTest {
         domainStore.addBooking(new Booking("BobbyTables", 101, tomorrow));
         domainStore.addBooking(new Booking("BobbyTables", 102, today));
         BookingManager bookingManager = new HotelBookingManager(domainStore);
-        assertThat(bookingManager.getAvailableRooms(today), is(Arrays.asList(101)));
+        assertThat(bookingManager.getAvailableRooms(today), is(rooms));
     }
 
     @Test
@@ -111,6 +111,6 @@ public class HotelBookingManagerTest {
         DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("BobbyTables", 101, today));
         BookingManager bookingManager = new HotelBookingManager(domainStore);
-        assertThat(bookingManager.getAvailableRooms(today), is(new ArrayList<>()));
+        assertThat(bookingManager.getAvailableRooms(today), is(new HashSet<>()));
     }
 }

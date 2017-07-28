@@ -11,9 +11,6 @@ import java.util.Set;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-/**
- * BDD outside in test
- */
 public class IntegrationTest {
 
     @Rule

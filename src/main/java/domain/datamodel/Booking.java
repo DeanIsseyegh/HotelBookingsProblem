@@ -18,7 +18,6 @@ public class Booking {
         return guestName;
     }
 
-
     public Integer getRoomNumber() {
         return roomNumber;
     }

@@ -2,29 +2,43 @@ package domain;
 
 import domain.datamodel.Booking;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DomainStore {
 
-    private List<Booking> bookings = new ArrayList<>();
-    private Set<Integer> rooms = new HashSet<>();
+    private Map<Integer, List<Booking>> roomsAndBookings = new HashMap<>();
 
     public DomainStore(Set<Integer> rooms) {
-        this.rooms = (rooms != null) ? rooms : this.rooms;
+        setupHotelRooms(rooms);
+    }
+
+    private void setupHotelRooms(Set<Integer> rooms) {
+        if (rooms != null) {
+            rooms.forEach(item -> roomsAndBookings.put(item, new ArrayList<Booking>()));
+        }
     }
 
     public Set<Integer> getRooms() {
-        return rooms;
+        return roomsAndBookings.keySet();
+    }
+
+    public Boolean doesRoomExist(Integer room) {
+        return (roomsAndBookings.get(room) != null);
     }
 
     public void addBooking(Booking booking) {
-        bookings.add(booking);
+        if (roomsAndBookings.get(booking.getRoomNumber()) != null) {
+            roomsAndBookings.get(booking.getRoomNumber()).add(booking);
+        }
+    }
+
+    public List<Booking> getBookingsForRoom(Integer roomNumber) {
+        return roomsAndBookings.get(roomNumber);
     }
 
     public List<Booking> getBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        roomsAndBookings.values().forEach(item -> bookings.addAll(item.subList(0, item.size())));
         return bookings;
     }
 
