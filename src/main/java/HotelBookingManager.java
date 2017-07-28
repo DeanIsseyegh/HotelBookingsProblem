@@ -17,16 +17,12 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public boolean isRoomAvailable(Integer room, LocalDate date) {
-        Boolean isAvailable = false;
-        if (domainStore.doesRoomExist(room)) {
-            isAvailable = !doesRoomHaveBookingOnDate(room, date);
-        }
-        return isAvailable;
+        return (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date));
     }
 
     @Override
     public synchronized void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException {
-        if (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date)) {
+        if (isRoomAvailable(room, date)) {
             domainStore.addBooking(new Booking(guest, room, date));
         } else {
             throw new NoRoomsAvailableException();
