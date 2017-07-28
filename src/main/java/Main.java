@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Main {
 
-    static final DomainStore threadSafeDatabase = new DomainStore(Arrays.asList(101));
+    static final DomainStore threadSafeDatabase = new DomainStore(new HashSet<>(Arrays.asList(101)));
 
     public static void main(String args[]) throws Exception {
         BookingManager bm = new HotelBookingManager(threadSafeDatabase);

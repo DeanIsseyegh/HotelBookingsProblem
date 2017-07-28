@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,10 +17,11 @@ public class DomainStoreTest {
     @Test
     public void ReturnsRooms() {
         DomainStore domainStore = new DomainStore(null);
-        assertEquals(new ArrayList<>(), domainStore.getRooms());
+        assertEquals(new HashSet<>(), domainStore.getRooms());
 
-        domainStore = new DomainStore(Arrays.asList(101));
-        assertEquals(Arrays.asList(101), domainStore.getRooms());
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
+        domainStore = new DomainStore(rooms);
+        assertEquals(rooms, domainStore.getRooms());
     }
 
     @Test

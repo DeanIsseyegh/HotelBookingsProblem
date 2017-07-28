@@ -4,6 +4,7 @@ import domain.DomainStore;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class HotelBookingManager implements BookingManager {
 
@@ -15,7 +16,7 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public boolean isRoomAvailable(Integer room, LocalDate date) {
-        List<Integer> rooms = domainStore.getRooms();
+        Set<Integer> rooms = domainStore.getRooms();
         List<Booking> bookings = domainStore.getBookings();
         Boolean isAvailable = false;
         if (rooms.contains(room)) {
@@ -26,7 +27,7 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException{
-        List<Integer> rooms = domainStore.getRooms();
+        Set<Integer> rooms = domainStore.getRooms();
         List<Booking> bookings = domainStore.getBookings();
         if (rooms.contains(room) && !doesRoomHaveBookingOnDate(room, date, bookings)) {
             domainStore.addBooking(new Booking(guest, room, date));

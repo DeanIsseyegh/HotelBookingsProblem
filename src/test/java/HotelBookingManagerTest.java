@@ -3,9 +3,7 @@ import domain.DomainStore;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.is;
@@ -20,7 +18,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_AvailableRoom_Then_ReturnTrue() {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101, 102));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101, 102));
+        DomainStore domainStore = new DomainStore(rooms);
         BookingManager bookingManager = new HotelBookingManager(domainStore);
 
         assertTrue(bookingManager.isRoomAvailable(101, today));
@@ -36,7 +35,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_RoomExistsButDatesAreBooked_Then_ReturnFalse() {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101, 102));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101, 102));
+        DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("Bobby Tables", 101, today));
         BookingManager bookingManager = new HotelBookingManager(domainStore);
 
@@ -45,7 +45,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_AvailableRoomExists_AndOtherDatesAndRoomsBooked_Then_ReturnTrue() {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101, 102));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101, 102));
+        DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("Bobby Tables", 101, yday));
         domainStore.addBooking(new Booking("Bobby Tables", 101, tomorrow));
         domainStore.addBooking(new Booking("Bobby Tables", 102, today));
@@ -64,7 +65,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_RoomsExistWithNoBookings_Then_AddBooking() throws NoRoomsAvailableException {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
+        DomainStore domainStore = new DomainStore(rooms);
         BookingManager bookingManager = new HotelBookingManager(domainStore);
 
         bookingManager.addBooking("BobbyTables", 101, today);
@@ -78,7 +80,8 @@ public class HotelBookingManagerTest {
 
     @Test(expected = NoRoomsAvailableException.class)
     public void Given_RoomsExistButAlreadyHasBookingOnDate_Then_ThrowException() throws NoRoomsAvailableException {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
+        DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("BobbyTables", 101, today));
         BookingManager bookingManager = new HotelBookingManager(domainStore);
         bookingManager.addBooking("BobbyTables", 101, today);
@@ -93,7 +96,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_RoomExistsWithNoBookings_Then_ReturnAvailableRooms() {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
+        DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("BobbyTables", 101, yday));
         domainStore.addBooking(new Booking("BobbyTables", 101, tomorrow));
         domainStore.addBooking(new Booking("BobbyTables", 102, today));
@@ -103,7 +107,8 @@ public class HotelBookingManagerTest {
 
     @Test
     public void Given_RoomExistsButHasBookings_Then_ReturnEmptyList() {
-        DomainStore domainStore = new DomainStore(Arrays.asList(101));
+        Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
+        DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("BobbyTables", 101, today));
         BookingManager bookingManager = new HotelBookingManager(domainStore);
         assertThat(bookingManager.getAvailableRooms(today), is(new ArrayList<>()));
