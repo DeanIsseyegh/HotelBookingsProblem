@@ -1,5 +1,6 @@
-package domain;
+package domain.datamodel;
 
+import domain.datamodel.Booking;
 import org.junit.Test;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-import domain.Booking;
+import domain.datamodel.Booking;
 import domain.DomainStore;
 import org.junit.Test;
 
