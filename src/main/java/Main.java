@@ -20,6 +20,7 @@ public class Main {
             } catch (NoRoomsAvailableException e) {
                 System.out.println("No rooms available exception caught!");
             }
+            System.out.println("Available rooms are : " + bm.getAvailableRooms(today));
         }
     }
 }

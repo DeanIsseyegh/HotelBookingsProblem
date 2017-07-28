@@ -6,7 +6,7 @@ import java.util.*;
 
 public class DomainStore {
 
-    private Map<Integer, List<Booking>> roomsAndBookings = new HashMap<>();
+    private Map<Integer, List<Booking>> roomsAndBookings = Collections.synchronizedMap(new HashMap<>());
 
     public DomainStore(Set<Integer> rooms) {
         setupHotelRooms(rooms);
@@ -37,9 +37,9 @@ public class DomainStore {
     }
 
     public List<Booking> getBookings() {
-        List<Booking> bookings = new ArrayList<>();
-        roomsAndBookings.values().forEach(item -> bookings.addAll(item.subList(0, item.size())));
-        return bookings;
+        List<Booking> allBookings = new ArrayList<>();
+        roomsAndBookings.values().forEach(item -> allBookings.addAll(item.subList(0, item.size())));
+        return allBookings;
     }
 
 }

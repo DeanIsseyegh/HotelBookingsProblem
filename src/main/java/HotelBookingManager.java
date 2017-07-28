@@ -2,6 +2,8 @@ import domain.datamodel.Booking;
 import domain.DomainStore;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +25,7 @@ public class HotelBookingManager implements BookingManager {
     }
 
     @Override
-    public void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException{
+    public synchronized void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException {
         if (domainStore.doesRoomExist(room) && !doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room))) {
             domainStore.addBooking(new Booking(guest, room, date));
         } else {
@@ -33,13 +35,14 @@ public class HotelBookingManager implements BookingManager {
 
     @Override
     public Iterable<Integer> getAvailableRooms(LocalDate date) {
-        Set<Integer> availableRooms = domainStore.getRooms();
+        Set<Integer> availableRooms = new HashSet<>(domainStore.getRooms());
         availableRooms.removeIf((Integer room) -> doesRoomHaveBookingOnDate(room, date, domainStore.getBookingsForRoom(room)));
         return availableRooms;
     }
 
     private Boolean doesRoomHaveBookingOnDate(Integer room, LocalDate date, List<Booking> existingBookings) {
-        for (Booking booking : existingBookings) {
+        List<Booking> threadSafeBookings = new ArrayList<>(existingBookings);
+        for (Booking booking : threadSafeBookings) {
             if (booking.isOn(room, date)) {
                 return true;
             }
