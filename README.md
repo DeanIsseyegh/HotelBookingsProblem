@@ -13,6 +13,4 @@ Thread safety is acquired by adding the synchronized keyword to the addBooking m
 This will lock any of the other read/insert BookingManager instance calls preventing any race conditions (e.g. two bookings being made at the same time, or a manager thinking a room is available just as another one books it out).
 Because the other methods are read only, it does not make sense to lock them (e.g. does not matter if managers are concurrently reading the domain store.)
 
-SynchronizedMap was used to allow thread-safe iteration over all the bookings, specifically for the `domainStore.getBookings()` method
-
-
+If the app needed to have multipled instances of booking manager to scale up, a SynchronizedMap and SynchronizedList could be used to allow thread-safety (assuming once instance of the DomainStore)

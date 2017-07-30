@@ -11,6 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Used to test out thread safety of application
+ */
 public class ThreadSafeChecker {
 
     static final DomainStore DOMAIN_STORE = new DomainStore(new HashSet<>(Arrays.asList(101, 102, 103, 104)));
@@ -21,10 +24,14 @@ public class ThreadSafeChecker {
         List list = new ArrayList<>();
         Callable<String> callableTask = () -> {
             TimeUnit.MILLISECONDS.sleep(10);
-            new TypicalHotelManagerActions(BM).run();
+            try {
+                new TypicalHotelManagerActions(BM).run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return "Task's execution";
         };
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000 * 3; i++) {
             list.add(callableTask);
         }
         executorService.invokeAll(list);
@@ -65,8 +72,6 @@ class TypicalHotelManagerActions implements Runnable {
             bm.isRoomAvailable(104, today);
             bm.isRoomAvailable(101, today);
             bm.isRoomAvailable(101, tomorrow);
-            bm.isRoomAvailable(102, today);
-            bm.isRoomAvailable(103, today);
             try {
                 bm.addBooking("Jones", 101, today); // throws an exception
             } catch (RoomNotAvailableException e) {
