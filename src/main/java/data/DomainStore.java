@@ -3,10 +3,12 @@ package data;
 import data.domain.Booking;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DomainStore {
 
-    private Map<Integer, List<Booking>> roomsAndBookings = Collections.synchronizedMap(new HashMap<>());
+    //private Map<Integer, List<Booking>> roomsAndBookings = Collections.synchronizedMap(new HashMap<>());
+    private Map<Integer, List<Booking>> roomsAndBookings = new HashMap<>();
 
     public DomainStore(Set<Integer> rooms) {
         setupHotelRooms(rooms);
@@ -38,7 +40,7 @@ public class DomainStore {
 
     public List<Booking> getBookings() {
         List<Booking> allBookings = new ArrayList<>();
-        roomsAndBookings.values().forEach(item -> allBookings.addAll(item.subList(0, item.size())));
+        roomsAndBookings.values().forEach(item -> allBookings.addAll(item));
         return allBookings;
     }
 
