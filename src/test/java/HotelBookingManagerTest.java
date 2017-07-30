@@ -1,6 +1,9 @@
-import domain.datamodel.Booking;
-import domain.DomainStore;
+import data.domain.Booking;
+import data.DomainStore;
 import org.junit.Test;
+import service.BookingManager;
+import service.HotelBookingManager;
+import service.RoomNotAvailableException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -56,15 +59,15 @@ public class HotelBookingManagerTest {
         assertTrue(bookingManager.isRoomAvailable(101, today));
     }
 
-    @Test(expected = NoRoomsAvailableException.class)
-    public void Given_NoBookingsAndNoRoomExists_Then_ThrowException() throws NoRoomsAvailableException {
+    @Test(expected = RoomNotAvailableException.class)
+    public void Given_NoBookingsAndNoRoomExists_Then_ThrowException() throws RoomNotAvailableException {
         DomainStore domainStore = new DomainStore(null);
         BookingManager bookingManager = new HotelBookingManager(domainStore);
         bookingManager.addBooking("BobbyTables", 101, today);
     }
 
     @Test
-    public void Given_RoomsExistWithNoBookings_Then_AddBooking() throws NoRoomsAvailableException {
+    public void Given_RoomsExistWithNoBookings_Then_AddBooking() throws RoomNotAvailableException {
         Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
         DomainStore domainStore = new DomainStore(rooms);
         BookingManager bookingManager = new HotelBookingManager(domainStore);
@@ -78,8 +81,8 @@ public class HotelBookingManagerTest {
         assertThat(bookings.get(0).getGuestName(), is("BobbyTables"));
     }
 
-    @Test(expected = NoRoomsAvailableException.class)
-    public void Given_RoomsExistButAlreadyHasBookingOnDate_Then_ThrowException() throws NoRoomsAvailableException {
+    @Test(expected = RoomNotAvailableException.class)
+    public void Given_RoomsExistButAlreadyHasBookingOnDate_Then_ThrowException() throws RoomNotAvailableException {
         Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
         DomainStore domainStore = new DomainStore(rooms);
         domainStore.addBooking(new Booking("BobbyTables", 101, today));

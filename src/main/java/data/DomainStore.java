@@ -1,6 +1,6 @@
-package domain;
+package data;
 
-import domain.datamodel.Booking;
+import data.domain.Booking;
 
 import java.util.*;
 

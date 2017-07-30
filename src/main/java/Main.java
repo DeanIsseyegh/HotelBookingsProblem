@@ -1,4 +1,7 @@
-import domain.DomainStore;
+import data.DomainStore;
+import service.BookingManager;
+import service.HotelBookingManager;
+import service.RoomNotAvailableException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -17,8 +20,9 @@ public class Main {
             System.out.println(bm.isRoomAvailable(101, today)); // outputs false
             try {
                 bm.addBooking("Jones", 101, today); // throws an exception
-            } catch (NoRoomsAvailableException e) {
+            } catch (RoomNotAvailableException e) {
                 System.out.println("No rooms available exception caught!");
+                e.printStackTrace();
             }
             System.out.println("Available rooms are : " + bm.getAvailableRooms(today));
         }

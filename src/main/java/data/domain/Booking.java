@@ -1,4 +1,4 @@
-package domain.datamodel;
+package data.domain;
 
 import java.time.LocalDate;
 

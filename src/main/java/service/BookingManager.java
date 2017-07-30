@@ -1,3 +1,5 @@
+package service;
+
 import java.time.LocalDate;
 
 public interface BookingManager {
@@ -10,7 +12,7 @@ public interface BookingManager {
      * Add a booking for the given guest in the given room on the given
      * date. If the room is not available, throw a suitable Exception.
      */
-    void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException;
+    void addBooking(String guest, Integer room, LocalDate date) throws RoomNotAvailableException;
 
     /** * Return a list of all the available room numbers for the given date */
     Iterable<Integer> getAvailableRooms(LocalDate date);

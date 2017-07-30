@@ -1,7 +1,10 @@
-import domain.DomainStore;
+import data.DomainStore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import service.BookingManager;
+import service.HotelBookingManager;
+import service.RoomNotAvailableException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,7 +20,7 @@ public class IntegrationTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void Integration_Test() throws NoRoomsAvailableException {
+    public void Integration_Test() throws RoomNotAvailableException {
         Set<Integer> rooms = new HashSet<>(Arrays.asList(101));
         DomainStore fakeDB = new DomainStore(rooms);
         BookingManager bm = new HotelBookingManager(fakeDB);
@@ -25,7 +28,7 @@ public class IntegrationTest {
         assertTrue(bm.isRoomAvailable(101, today));
         bm.addBooking("Smith", 101, today);
         assertFalse(bm.isRoomAvailable(101, today));
-        thrown.expect(NoRoomsAvailableException.class);
+        thrown.expect(RoomNotAvailableException.class);
         bm.addBooking("Jones", 101, today); // throws an exception
     }
 

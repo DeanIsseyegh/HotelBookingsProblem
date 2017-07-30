@@ -1,5 +1,7 @@
-import domain.datamodel.Booking;
-import domain.DomainStore;
+package service;
+
+import data.domain.Booking;
+import data.DomainStore;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ public class HotelBookingManager implements BookingManager {
 
     private DomainStore domainStore;
 
-    HotelBookingManager(DomainStore domainStore) {
+    public HotelBookingManager(DomainStore domainStore) {
         this.domainStore = domainStore;
     }
 
@@ -21,11 +23,12 @@ public class HotelBookingManager implements BookingManager {
     }
 
     @Override
-    public synchronized void addBooking(String guest, Integer room, LocalDate date) throws NoRoomsAvailableException {
+    public synchronized void addBooking(String guest, Integer room, LocalDate date) throws RoomNotAvailableException {
         if (isRoomAvailable(room, date)) {
             domainStore.addBooking(new Booking(guest, room, date));
         } else {
-            throw new NoRoomsAvailableException();
+            String exceptionMessage = String.format("No room available for room %d on date %s for guest %s", room, date.toString(), guest);
+            throw new RoomNotAvailableException(exceptionMessage);
         }
     }
 
