@@ -7,8 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DomainStore {
 
-    //private Map<Integer, List<Booking>> roomsAndBookings = Collections.synchronizedMap(new HashMap<>());
-    private Map<Integer, List<Booking>> roomsAndBookings = new HashMap<>();
+    private Map<Integer, List<Booking>> roomsAndBookings = Collections.synchronizedMap(new HashMap<>());
 
     public DomainStore(Set<Integer> rooms) {
         setupHotelRooms(rooms);
